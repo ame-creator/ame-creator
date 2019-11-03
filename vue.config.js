@@ -58,10 +58,6 @@ module.exports = {
   runtimeCompiler: true,
 
   pluginOptions: {
-    express: {
-      shouldServeApp: true,
-      serverDir: './server'
-    },
     'style-resources-loader': {
       preProcessor: 'sass',
       patterns: []
