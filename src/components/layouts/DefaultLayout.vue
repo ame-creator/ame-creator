@@ -4,12 +4,12 @@
     <app-toolbar class="app--toolbar" @side-icon-click="handleDrawerVisiable" />
     <v-content>
       <!-- Page Header -->
-      <page-header></page-header>
+      <!-- <page-header></page-header> -->
       <div class="page-wrapper"><router-view /></div>
       <!-- App Footer -->
-      <v-footer height="auto" class="white pa-3 app--footer">
+      <!-- <v-footer height="auto" class="white pa-3 app--footer">
         <span>isocked.com Design &copy; {{ new Date().getFullYear() }}</span>
-      </v-footer>
+      </v-footer> -->
     </v-content>
     <!-- Go to top -->
     <app-fab />
@@ -32,7 +32,7 @@ export default {
 
   data() {
     return {
-      showDrawer: true,
+      showDrawer: false,
     }
   },
   methods: {

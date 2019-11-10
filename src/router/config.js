@@ -109,6 +109,20 @@ export const protectedRoute = [
         component: () =>
           import(/* webpackChunkName: "error-403" */ '@/views/error/Deny.vue'),
       },
+      {
+        path: '/editor/:pageId',
+        meta: {
+          title: 'Editor',
+          group: 'apps',
+          icon: 'edit',
+        },
+        name: 'Editor',
+        props: route => ({
+          id: route.query.id,
+        }),
+        component: () =>
+          import(/* webpackChunkName: "editor" */ '@/views/editor/Editor.vue'),
+      },
     ],
   },
 
