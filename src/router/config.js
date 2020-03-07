@@ -57,7 +57,7 @@ export const protectedRoute = [
       group: 'apps',
       icon: '',
     },
-    redirect: '/dashboard',
+    redirect: '/editor/5e5e46cc294cb2043c845ee5',
     children: [
       {
         path: '/dashboard',
@@ -70,35 +70,35 @@ export const protectedRoute = [
         component: () =>
           import(/* webpackChunkName: "dashboard" */ '@/views/Dashboard.vue'),
       },
-      {
-        path: '/media',
-        meta: {
-          title: 'Media',
-          group: 'apps',
-          icon: 'media',
-        },
-        name: 'Media',
-        props: route => ({
-          type: route.query.type,
-        }),
-        component: () =>
-          import(/* webpackChunkName: "media" */ '@/views/Media.vue'),
-      },
+      // {
+      //   path: '/media',
+      //   meta: {
+      //     title: 'Media',
+      //     group: 'apps',
+      //     icon: 'media',
+      //   },
+      //   name: 'Media',
+      //   props: route => ({
+      //     type: route.query.type,
+      //   }),
+      //   component: () =>
+      //     import(/* webpackChunkName: "media" */ '@/views/Media.vue'),
+      // },
 
-      {
-        path: '/task',
-        meta: {
-          title: 'Task',
-          group: 'apps',
-          icon: 'media',
-        },
-        name: 'Task',
-        props: route => ({
-          type: route.query.type,
-        }),
-        component: () =>
-          import(/* webpackChunkName: "task" */ '@/views/Calendar.vue'),
-      },
+      // {
+      //   path: '/task',
+      //   meta: {
+      //     title: 'Task',
+      //     group: 'apps',
+      //     icon: 'media',
+      //   },
+      //   name: 'Task',
+      //   props: route => ({
+      //     type: route.query.type,
+      //   }),
+      //   component: () =>
+      //     import(/* webpackChunkName: "task" */ '@/views/Calendar.vue'),
+      // },
       {
         path: '/403',
         name: 'Forbidden',
@@ -127,25 +127,25 @@ export const protectedRoute = [
   },
 
   //list
-  {
-    path: '/cms',
-    component: DefaultLayout,
-    redirect: '/cms/table',
-    meta: {
-      title: 'CMS',
-      icon: 'view_compact',
-      group: 'cms',
-    },
-    children: [
-      {
-        path: '/cms/table',
-        name: 'ListTable',
-        meta: {
-          title: 'CMS Table',
-        },
-        component: () =>
-          import(/* webpackChunkName: "table" */ '@/views/list/Table.vue'),
-      },
-    ],
-  },
+  // {
+  //   path: '/cms',
+  //   component: DefaultLayout,
+  //   redirect: '/cms/table',
+  //   meta: {
+  //     title: 'CMS',
+  //     icon: 'view_compact',
+  //     group: 'cms',
+  //   },
+  //   children: [
+  //     {
+  //       path: '/cms/table',
+  //       name: 'ListTable',
+  //       meta: {
+  //         title: 'CMS Table',
+  //       },
+  //       component: () =>
+  //         import(/* webpackChunkName: "table" */ '@/views/list/Table.vue'),
+  //     },
+  //   ],
+  // },
 ]

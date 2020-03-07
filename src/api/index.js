@@ -12,3 +12,11 @@ service.interceptors.response.use(response => {
 export function getPage(pageId) {
   return service.get(`/pages/${pageId}`)
 }
+
+export function getComponents() {
+  return service.get('/components')
+}
+
+export function pageAddComponents(params) {
+  return service.post('/page/addComponents', params)
+}

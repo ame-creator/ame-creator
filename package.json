@@ -8,7 +8,8 @@
     "lint": "vue-cli-service lint",
     "eslint-fix": "eslint src/**/**/*.vue --fix",
     "format-code": "prettier-eslint --write \"src/**/*.js\" \"src/**/*.vue\"",
-    "deploy": "aliyun-oss-deploy -p ./dist"
+    "deploy": "aliyun-oss-deploy -p ./dist",
+    "dev": "vue-cli-service serve"
   },
   "dependencies": {
     "axios": "^0.19.0",
