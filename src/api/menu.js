@@ -3,7 +3,7 @@ const Menu = [
   {
     text: 'Dashboard',
     icon: 'dashboard',
-    to: '/editor/5dc6ae7525d642e928a90041',
+    to: '/editor/5e5e46cc294cb2043c845ee5',
   },
   {
     text: 'Components',

@@ -3,7 +3,7 @@
     <v-app-bar-nav-icon @click="handleDrawerToggle" />
     <v-spacer />
     <v-toolbar-items>
-      <v-btn icon href="https://github.com/tookit/vue-material-admin">
+      <v-btn icon href="https://github.com/ame-creator/ame-creator">
         <v-icon class="fa-2x">fa-github</v-icon>
       </v-btn>
       <v-btn icon @click="handleFullScreen()">
