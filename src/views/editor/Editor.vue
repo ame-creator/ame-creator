@@ -3,12 +3,12 @@
     <div class="content">
       <v-card class="preview-card mr-2">
         <v-card-actions>
-          <v-btn text color="blue dark-4">预览</v-btn>
+          <v-btn text color="blue dark-4" @click="onPagePreview">预览</v-btn>
         </v-card-actions>
         <div class="preview-outer">
           <div class="preview-inner">
             <iframe
-              :src="iframeUrl"
+              :src="preview.url"
               title="preview"
               frame-border="0"
               :style="{ width: '100%', height: '100%' }"
@@ -24,12 +24,13 @@
         </v-card-actions>
         <div
           v-if="localComponentList && localComponentList.length > 0"
-          class="component-list"
+          class="component-list py-1"
         >
           <v-card
             v-for="item in localComponentList"
             :key="item._id"
             class="component-card mb-2"
+            @click="onComponentClick(item)"
           >
             <v-img class="align-end" height="80px" src="">
               <v-card-title>{{ item.detail.title }}</v-card-title>
@@ -41,13 +42,22 @@
       </v-card>
       <v-card class="options-card">
         <v-card-actions>
-          <v-btn text color="blue dark-4">保存并更新预览</v-btn>
+          <v-btn text color="blue dark-4" @click="onComponentOptionsSave"
+            >保存并更新预览</v-btn
+          >
         </v-card-actions>
-        options
+        <JsonEditor
+          :schema="editor.schemaData && editor.schemaData.schema"
+          :options="editor.schemaData && editor.schemaData.options"
+          @change="onEditorChange"
+        />
       </v-card>
     </div>
     <v-snackbar v-model="error.show" color="error" top>
       {{ error.message }}
+    </v-snackbar>
+    <v-snackbar v-model="success.show" color="success" top>
+      {{ success.message }}
     </v-snackbar>
     <v-dialog v-model="addModal.show" width="800">
       <v-card>
@@ -82,41 +92,63 @@
 </template>
 
 <script>
-import { getPage, getComponents, pageAddComponents } from '@/api'
+import {
+  getPage,
+  getComponents,
+  pageAddComponents,
+  getComponentSchema,
+  previewPage,
+  updateComponentData,
+} from '@/api'
+
+import JsonEditor from '@/components/JsonEditor'
 
 export default {
+  components: {
+    JsonEditor,
+  },
+
   data() {
     return {
-      iframeUrl: 'https://jituancaiyun.com/d/',
       pageId: '',
       pageData: {},
+
       localComponentList: [],
       globalComponents: [],
+
       error: {
         show: false,
         message: '',
       },
+      success: {
+        show: false,
+        message: '',
+      },
+
       addModal: {
         show: false,
         selectItem: null,
       },
+
+      preview: {
+        loading: false,
+        url: '',
+      },
+
+      editor: {
+        loading: false,
+        schemaData: {
+          schema: null,
+          options: null,
+        },
+        localOptions: null,
+      },
+
+      activeComponent: null,
     }
   },
 
   computed: {
-    // componentList() {
-    //   const { componentList, componentDetails } = this.pageData
-    //   if (!componentList) {
-    //     return []
-    //   }
-
-    //   const details = componentDetails || {}
-    //   return componentList.map(item => ({
-    //     ...item,
-    //     detail: details[item.componentId],
-    //   }))
-    // },
-
     computedComponents() {
       const { selectItem } = this.addModal
 
@@ -140,6 +172,9 @@ export default {
     if (pageId) {
       this.pageId = pageId
       this.initPage(pageId)
+      this.$nextTick(() => {
+        this.onPagePreview()
+      })
     }
 
     getComponents().then(data => {
@@ -148,30 +183,6 @@ export default {
   },
 
   methods: {
-    clearError() {
-      this.error = {
-        show: false,
-        message: '',
-      }
-    },
-
-    initPage(pageId) {
-      const localPageId = pageId || this.pageId
-
-      getPage(localPageId)
-        .then(data => {
-          this.clearError()
-          this.pageData = data
-          this.initLocalComponentList(data)
-        })
-        .catch(error => {
-          this.error = {
-            show: true,
-            message: error.message,
-          }
-        })
-    },
-
     addComponentSelect(selectItem) {
       this.addModal.selectItem = selectItem
     },
@@ -203,6 +214,89 @@ export default {
         })
     },
 
+    onComponentClick(item) {
+      this.activeComponent = item
+
+      const params = {
+        name: item.detail.name,
+        version: this.pageData.componentMap[item.componentId].version,
+      }
+
+      this.getComponentSchema(params)
+    },
+
+    onPagePreview() {
+      const { pageId } = this
+      if (!pageId) {
+        return
+      }
+
+      this.preview.loading = true
+      previewPage(pageId)
+        .then(data => {
+          this.preview.url = data.url || ''
+        })
+        .catch(error => {
+          this.error = {
+            show: true,
+            message: error.message,
+          }
+        })
+        .finally(() => {
+          this.preview.loading = false
+        })
+    },
+
+    onEditorChange(options) {
+      this.editor.localOptions = options
+    },
+
+    onComponentOptionsSave() {
+      const { pageId, activeComponent, editor } = this
+      if (!pageId || !activeComponent) {
+        return
+      }
+
+      updateComponentData({
+        pageId,
+        componentListId: activeComponent._id,
+        options: editor.localOptions,
+      }).then(() => {
+        this.success = {
+          show: true,
+          message: '组件数据更新成功。',
+        }
+
+        this.initPage(pageId)
+
+        this.onPagePreview()
+      })
+    },
+
+    clearError() {
+      this.error = {
+        show: false,
+        message: '',
+      }
+    },
+
+    initPage(pageId) {
+      const localPageId = pageId || this.pageId
+
+      getPage(localPageId)
+        .then(data => {
+          this.clearError()
+          this.pageData = data
+          this.initLocalComponentList(data)
+        })
+        .catch(error => {
+          this.error = {
+            show: true,
+            message: error.message,
+          }
+        })
+    },
+
     initLocalComponentList(pageData) {
       const { componentList, componentDetails } = pageData
 
@@ -222,6 +316,36 @@ export default {
         ...item,
         detail: details[item.componentId],
       }))
+    },
+
+    getComponentSchema({ name, version }) {
+      this.editor.loading = true
+
+      const { activeComponent } = this
+
+      getComponentSchema({
+        name,
+        version,
+      })
+        .then(data => {
+          const schemaData = {
+            schema: data.schema,
+            options: data.options,
+          }
+          if (activeComponent && activeComponent.options) {
+            schemaData.options = activeComponent.options
+          }
+          this.editor.schemaData = schemaData
+        })
+        .catch(error => {
+          this.error = {
+            show: true,
+            message: error.message,
+          }
+        })
+        .finally(() => {
+          this.editor.loading = false
+        })
     },
   },
 }

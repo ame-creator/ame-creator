@@ -6,6 +6,7 @@ import './plugins/storage'
 import './plugins/vuetify'
 import 'roboto-fontface/css/roboto/roboto-fontface.css'
 import 'font-awesome/css/font-awesome.css'
+import 'bootstrap/dist/css/bootstrap.css'
 import './theme/default.sass'
 
 import App from './App.vue'

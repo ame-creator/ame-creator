@@ -20,3 +20,17 @@ export function getComponents() {
 export function pageAddComponents(params) {
   return service.post('/page/addComponents', params)
 }
+
+export function getComponentSchema(params) {
+  return service.get('/component/schema', {
+    params,
+  })
+}
+
+export function updateComponentData(params) {
+  return service.post('/page/updateComponentData', params)
+}
+
+export function previewPage(pageId) {
+  return service.post('/render/page', { pageId })
+}
