@@ -2,6 +2,9 @@
 # Ame Creator
 > 页面可视化搭建平台 web 前端
 
+## 平台整体环境搭建
+见 [ame-docker](https://github.com/ame-creator/ame-docker) 基于docker的一键启动环境
+
 ## Project setup
 ```
 yarn install
